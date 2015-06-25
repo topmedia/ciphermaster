@@ -17,6 +17,7 @@ var (
 	user        = flag.String("user", "bal", "Administrator username")
 	pass        = flag.String("pass", "2fourall", "Administrator password")
 	ciphers     = flag.String("cipers", "ECDHE-RSA-AES256-GCM-SHA384", "Ciphers to assign to services, colon-separated")
+	skip        = flag.String("skip", "", "If the service matches this string, no ciphers will be changed.")
 	listciphers = flag.Bool("listciphers", false, "List available ciphers and exit")
 )
 
@@ -134,8 +135,13 @@ func main() {
 	err = xml.Unmarshal([]byte(bodyFixed), &data)
 
 	for _, vs := range data.VSList {
-		if vs.SSLAcceleration == "Y" {
+		if vs.SSLAcceleration == "N" {
 			log.Printf("Skipping non-SSL Service %s", vs.Nickname)
+			continue
+		}
+
+		if *skip != "" && strings.Contains(vs.Nickname, *skip) {
+			log.Printf("Skipping Service %s because it matches -skip", vs.Nickname)
 			continue
 		}
 
