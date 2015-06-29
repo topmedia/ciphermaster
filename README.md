@@ -11,5 +11,6 @@ Usage of ./ciphermaster:
   -listciphers=false: List available ciphers and exit
   -pass="2fourall": Administrator password
   -skip="": If the service matches this string, no ciphers will be changed.
+  -only="": Only if the service matches this string ciphers will be changed.
   -user="bal": Administrator username
 ```
