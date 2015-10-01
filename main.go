@@ -16,9 +16,11 @@ var (
 	host        = flag.String("host", "192.168.110.123", "Load Balancer Hostname/IP")
 	user        = flag.String("user", "bal", "Administrator username")
 	pass        = flag.String("pass", "2fourall", "Administrator password")
-	ciphers     = flag.String("cipers", "ECDHE-RSA-AES256-GCM-SHA384", "Ciphers to assign to services, colon-separated")
+	ciphers     = flag.String("ciphers", "ECDHE-RSA-AES256-GCM-SHA384", "Ciphers to assign to services, colon-separated")
 	skip        = flag.String("skip", "", "If the service matches this string, no ciphers will be changed.")
+	only        = flag.String("only", "", "Only if the service matches this string ciphers will be changed.")
 	listciphers = flag.Bool("listciphers", false, "List available ciphers and exit")
+	dryrun      = flag.Bool("dryrun", false, "Simulate a run, preview changes")
 )
 
 func availableCiphers() []string {
@@ -142,6 +144,16 @@ func main() {
 
 		if *skip != "" && strings.Contains(vs.Nickname, *skip) {
 			log.Printf("Skipping Service %s because it matches -skip", vs.Nickname)
+			continue
+		}
+
+		if *only != "" && !strings.Contains(vs.Nickname, *only) {
+			log.Printf("Skipping Service %s because it does not match -only", vs.Nickname)
+			continue
+		}
+
+		if *dryrun {
+			log.Printf("[DRY RUN] Would be setting ciphers of %s to %s", vs.Nickname, *ciphers)
 			continue
 		}
 
