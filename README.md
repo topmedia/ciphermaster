@@ -13,3 +13,7 @@ Usage of ./ciphermaster:
   -skip="": If the service matches this string, no ciphers will be changed.
   -user="bal": Administrator username
 ```
+
+## Binary Download
+
+Pre-compiled binaries for Windows, Linux, and OS X are available at https://github.com/topmedia/ciphermaster/releases
